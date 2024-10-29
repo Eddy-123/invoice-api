@@ -24,6 +24,7 @@ class InvoiceValidator:
 
             cls.validate_columns(data)
             cls.validate_data_types(data)
+            cls.validate_rows(data)
         except Exception as e:
             raise ValidationError(f"Erreur lors de la validation du fichier: {str(e)}")
 

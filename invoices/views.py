@@ -22,7 +22,6 @@ class FileUploadViewSet(viewsets.ViewSet):
 
         try:
             data = InvoiceValidator.validate_file(file)
-            InvoiceValidator.validate_rows(data)
 
             for _, row in data.iterrows():
                 invoice = None
