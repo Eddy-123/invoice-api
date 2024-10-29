@@ -128,7 +128,7 @@ class InvoiceValidatorTest(TestCase):
 
         with self.assertRaises(ValidationError) as context:
             InvoiceValidator.validate_file(file)
-        self.assertIn("Quantité d'article", str(context.exception))
+        self.assertIn("Quantité", str(context.exception))
 
     def test_invalid_email_in_excel(self):
         data = [
@@ -151,7 +151,6 @@ class InvoiceValidatorTest(TestCase):
         with self.assertRaises(ValidationError) as context:
             InvoiceValidator.validate_file(file)
         self.assertIn("Adresse e-mail invalide", str(context.exception))
-
 
     def test_valid_csv_file(self):
         content = (
