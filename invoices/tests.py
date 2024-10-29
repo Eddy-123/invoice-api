@@ -40,7 +40,8 @@ class ArticleModelTest(TestCase):
     def test_article_creation(self):
         self.assertEqual(self.article.description, "Article A")
         self.assertEqual(self.article.quantity, 2)
-        self.assertEqual(self.article.unit_price, 100.00)
+        self.assertEqual(self.article.unit_price, 50.00)
+        self.assertEqual(self.article.total_price, 100.00)
 
 
 class InvoiceValidatorTest(TestCase):
