@@ -13,3 +13,7 @@ This is a Django-based API designed for invoice generation as part of the Kudizy
 
 - For each new feature, a TDD approach is adopted
 - The app is firstly created on the feature branch. After merging the newly created app on the test branch, the tests are written, triggering a TDD process
+
+# Business considerations
+
+- If an invoice number is empty in the file, a new invoice is created for this specific article
