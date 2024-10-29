@@ -1,10 +1,12 @@
 from django.test import TestCase
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.exceptions import ValidationError
+from django.urls import reverse
+from rest_framework import status
+from rest_framework.test import APIClient
 from .models import Invoice, Article
 from .validators import InvoiceValidator
-from io import BytesIO
-import pandas as pd
+from .helpers import generate_excel_file
 
 
 class InvoiceModelTest(TestCase):
@@ -47,14 +49,6 @@ class ArticleModelTest(TestCase):
 
 
 class InvoiceValidatorTest(TestCase):
-    def generate_excel_file(self, data):
-        output = BytesIO()
-        df = pd.DataFrame(data)
-        with pd.ExcelWriter(output, engine="openpyxl") as writer:
-            df.to_excel(writer, index=False)
-        output.seek(0)
-        return output
-
     def test_valid_excel_file(self):
         data = [
             {
@@ -75,7 +69,7 @@ class InvoiceValidatorTest(TestCase):
             },
         ]
 
-        excel_file = self.generate_excel_file(data)
+        excel_file = generate_excel_file(data)
         file = SimpleUploadedFile(
             "test.xlsx",
             excel_file.read(),
@@ -96,7 +90,7 @@ class InvoiceValidatorTest(TestCase):
                 "Prix de l'article": 50.00,
             }
         ]
-        excel_file = self.generate_excel_file(data)
+        excel_file = generate_excel_file(data)
         file = SimpleUploadedFile(
             "test.xlsx",
             excel_file.read(),
@@ -119,7 +113,7 @@ class InvoiceValidatorTest(TestCase):
                 "Prix de l'article": 100.00,
             }
         ]
-        excel_file = self.generate_excel_file(data)
+        excel_file = generate_excel_file(data)
         file = SimpleUploadedFile(
             "test.xlsx",
             excel_file.read(),
@@ -141,7 +135,7 @@ class InvoiceValidatorTest(TestCase):
                 "Prix de l'article": 15.00,
             }
         ]
-        excel_file = self.generate_excel_file(data)
+        excel_file = generate_excel_file(data)
         file = SimpleUploadedFile(
             "test.xlsx",
             excel_file.read(),
@@ -169,3 +163,62 @@ class InvoiceValidatorTest(TestCase):
         )
         with self.assertRaises(ValidationError):
             InvoiceValidator.validate_file(file)
+
+
+class FileUploadTest(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.url = reverse("upload-invoice-file")
+
+    def test_successful_file_upload(self):
+        data = [
+            {
+                "Numéro de facture": "INV001",
+                "Nom du client": "Eddy ADEGNANDJOU",
+                "Email du client": "eddy@adegnandjou.com",
+                "Description de l'article": "Article A",
+                "Quantité d'article": 2,
+                "Prix de l'article": 50.00,
+            }
+        ]
+        excel_file = generate_excel_file(data)
+        file = SimpleUploadedFile(
+            "invoices.xlsx",
+            excel_file.read(),
+            content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        )
+
+        response = self.client.post(self.url, {"file": file}, format="multipart")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(
+            response.data["detail"], "Fichier validé et traité avec succès"
+        )
+        self.assertEqual(Invoice.objects.count(), 1)
+        self.assertEqual(Article.objects.count(), 1)
+
+    def test_upload_missing_file(self):
+        response = self.client.post(self.url, {}, format="multipart")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data["detail"], "Aucun fichier fourni")
+
+    def test_invalid_excel_file(self):
+        # Missing email
+        data = [
+            {
+                "Numéro de facture": "INV001",
+                "Nom du client": "Eddy ADEGNANDJOU",
+                "Description de l'article": "Article A",
+                "Quantité d'article": 2,
+                "Prix de l'article": 50.00,
+            }
+        ]
+        excel_file = generate_excel_file(data)
+        file = SimpleUploadedFile(
+            "invoices.xlsx",
+            excel_file.read(),
+            content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        )
+
+        response = self.client.post(self.url, {"file": file}, format="multipart")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("Colonnes manquantes", response.data["detail"])
