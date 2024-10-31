@@ -1,18 +1,22 @@
-import django.core.exceptions
-from rest_framework import viewsets, status
+from django.core.exceptions import ValidationError
+from decimal import Decimal
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser
-import pandas as pd
+from rest_framework.views import APIView
 from .validators import InvoiceValidator
 from .models import Invoice, Article
-from decimal import Decimal
-from django.core.exceptions import ValidationError
+from .serializers import FileSerializer
 
 
-class FileUploadViewSet(viewsets.ViewSet):
+class FileUploadAPIView(APIView):
     parser_classes = [MultiPartParser]
 
-    def create(self, request):
+    def post(self, request, *args, **kwargs):
+        serializer = FileSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
         file = request.FILES["file"]
 
         if not file:
