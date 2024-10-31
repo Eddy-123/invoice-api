@@ -32,6 +32,57 @@ class InvoiceModelTest(TestCase):
         self.assertNotEqual(self.invoice_without_number.invoice_number, "nan")
 
 
+class InvoiceListAPITest(TestCase):
+    def setUp(self):
+        self.invoice1 = Invoice.objects.create(
+            invoice_number="INV001",
+            customer_name="Customer A",
+            customer_email="customera@example.com",
+            total_amount=100.00,
+        )
+        self.invoice2 = Invoice.objects.create(
+            invoice_number="INV002",
+            customer_name="Customer B",
+            customer_email="customerb@example.com",
+            total_amount=100.00,
+        )
+
+        Article.objects.create(
+            invoice=self.invoice1,
+            description="Article 1",
+            quantity=2,
+            unit_price=25.00,
+            total_price=50.00,
+        )
+        Article.objects.create(
+            invoice=self.invoice1,
+            description="Article 2",
+            quantity=1,
+            unit_price=50.00,
+            total_price=50.00,
+        )
+
+        Article.objects.create(
+            invoice=self.invoice2,
+            description="Article 3",
+            quantity=4,
+            unit_price=50.00,
+            total_price=200.00,
+        )
+
+        self.url = reverse("invoice-list")
+
+    def test_invoice_list(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+
+        self.assertEqual(response.data[0]["invoice_number"], "INV001")
+        self.assertEqual(response.data[0]["customer_name"], "Customer A")
+        self.assertEqual(response.data[0]["customer_email"], "customera@example.com")
+        self.assertEqual(response.data[0]["total_amount"], "100.00")
+
+
 class ArticleModelTest(TestCase):
     def setUp(self):
         self.invoice = Invoice.objects.create(
