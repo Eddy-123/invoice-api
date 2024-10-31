@@ -1,13 +1,11 @@
 from django.core.exceptions import ValidationError
 from decimal import Decimal
-import django.db
 from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser
 from rest_framework.views import APIView
 from drf_spectacular.utils import (
     extend_schema,
-    OpenApiParameter,
     OpenApiExample,
     OpenApiResponse,
 )
@@ -103,5 +101,10 @@ class FileUploadAPIView(APIView):
 
 
 class InvoiceListAPIView(generics.ListAPIView):
+    queryset = Invoice.objects.all()
+    serializer_class = InvoiceSerializer
+
+
+class InvoiceDetailAPIView(generics.RetrieveAPIView):
     queryset = Invoice.objects.all()
     serializer_class = InvoiceSerializer
