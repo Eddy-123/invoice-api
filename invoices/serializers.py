@@ -9,6 +9,8 @@ class ArticleSerializer(serializers.ModelSerializer):
 
 
 class InvoiceSerializer(serializers.ModelSerializer):
+    articles = ArticleSerializer(many=True)
+
     class Meta:
         model = Invoice
         fields = [
