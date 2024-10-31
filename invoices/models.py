@@ -1,4 +1,5 @@
 from django.db import models
+import uuid
 
 
 class Invoice(models.Model):
@@ -10,6 +11,11 @@ class Invoice(models.Model):
 
     def __str__(self):
         return f"Facture: {self.invoice_number}"
+
+    def save(self, *args, **kwargs):
+        if self.invoice_number == "nan":
+            self.invoice_number = uuid.uuid4().hex[:20].upper()
+        super().save(*args, **kwargs)
 
 
 class Article(models.Model):
