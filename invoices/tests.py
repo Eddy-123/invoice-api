@@ -17,12 +17,18 @@ class InvoiceModelTest(TestCase):
             client_email="eddy@adegnandjou.com",
             total_amount=100.00,
         )
+        self.invoice_without_number = Invoice.objects.create(
+            client_name="Eddy ADEGNANDJOU",
+            client_email="eddy@adegnandjou.com",
+            total_amount=100.00,
+        )
 
     def test_invoice_creation(self):
         self.assertEqual(self.invoice.invoice_number, "INV001")
         self.assertEqual(self.invoice.client_name, "Eddy ADEGNANDJOU")
         self.assertEqual(self.invoice.client_email, "eddy@adegnandjou.com")
         self.assertEqual(self.invoice.total_amount, 100.00)
+        self.assertIsNotNone(self.invoice_without_number.invoice_number)
 
 
 class ArticleModelTest(TestCase):
