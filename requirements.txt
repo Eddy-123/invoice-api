@@ -1,10 +1,15 @@
 asgiref==3.8.1
+attrs==24.2.0
 Django==5.1.2
 django-cors-headers==4.6.0
 django-environ==0.11.2
 djangorestframework==3.15.2
+drf-spectacular==0.27.2
 et_xmlfile==2.0.0
+inflection==0.5.1
 iniconfig==2.0.0
+jsonschema==4.23.0
+jsonschema-specifications==2024.10.1
 numpy==2.1.2
 openpyxl==3.1.5
 packaging==24.1
@@ -14,6 +19,10 @@ pytest==8.3.3
 pytest-django==4.9.0
 python-dateutil==2.9.0.post0
 pytz==2024.2
+PyYAML==6.0.2
+referencing==0.35.1
+rpds-py==0.20.0
 six==1.16.0
 sqlparse==0.5.1
 tzdata==2024.2
+uritemplate==4.1.1

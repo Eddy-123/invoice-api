@@ -17,3 +17,7 @@ This is a Django-based API designed for invoice generation as part of the Kudizy
 # Business considerations
 
 - If an invoice number is empty in the file, a new invoice is created for this specific article
+
+# Documentation
+
+- The swagger documentation is available at: `http://127.0.0.1:8000/api/schema/swagger-ui/`

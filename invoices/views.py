@@ -4,6 +4,13 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser
 from rest_framework.views import APIView
+from drf_spectacular.utils import (
+    extend_schema,
+    OpenApiParameter,
+    OpenApiExample,
+    OpenApiResponse,
+)
+from drf_spectacular.types import OpenApiTypes
 from .validators import InvoiceValidator
 from .models import Invoice, Article
 from .serializers import FileSerializer
@@ -12,6 +19,35 @@ from .serializers import FileSerializer
 class FileUploadAPIView(APIView):
     parser_classes = [MultiPartParser]
 
+    @extend_schema(
+        operation_id="uploadFile",
+        summary="Upload a file",
+        description="Uploads a file to the server and returns a success message",
+        request=FileSerializer,
+        responses={
+            201: OpenApiResponse(
+                response=OpenApiTypes.OBJECT,
+                examples=[
+                    OpenApiExample(
+                        "Success Response",
+                        summary="File uploaded successfully",
+                        value={"detail": "Fichier validé et traité avec succès"},
+                    )
+                ],
+            ),
+            400: OpenApiResponse(
+                response=OpenApiTypes.OBJECT,
+                description="Bad Request",
+                examples=[
+                    OpenApiExample(
+                        "Validation Error",
+                        summary="File is required or invalid",
+                        value={"file": ["No file was submitted."]},
+                    )
+                ],
+            ),
+        },
+    )
     def post(self, request, *args, **kwargs):
         serializer = FileSerializer(data=request.data)
         if not serializer.is_valid():
