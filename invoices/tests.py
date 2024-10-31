@@ -121,7 +121,7 @@ class InvoiceDetailAPITest(TestCase):
 
         self.assertEqual(len(response.data["articles"]), 2)
         self.assertEqual(response.data["articles"][0]["description"], "Article 1")
-        self.assertEqual(response.data["articles"][0]["quantity"], "2")
+        self.assertEqual(response.data["articles"][0]["quantity"], 2)
         self.assertEqual(response.data["articles"][0]["unit_price"], "25.00")
         self.assertEqual(response.data["articles"][0]["total_price"], "50.00")
 
