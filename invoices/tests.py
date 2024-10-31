@@ -29,6 +29,7 @@ class InvoiceModelTest(TestCase):
         self.assertEqual(self.invoice.client_email, "eddy@adegnandjou.com")
         self.assertEqual(self.invoice.total_amount, 100.00)
         self.assertIsNotNone(self.invoice_without_number.invoice_number)
+        self.assertNotEqual(self.invoice_without_number.invoice_number, "nan")
 
 
 class ArticleModelTest(TestCase):
