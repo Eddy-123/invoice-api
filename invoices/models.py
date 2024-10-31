@@ -13,7 +13,7 @@ class Invoice(models.Model):
         return f"Facture: {self.invoice_number}"
 
     def save(self, *args, **kwargs):
-        if self.invoice_number == "nan":
+        if str(self.invoice_number) == "nan":
             self.invoice_number = uuid.uuid4().hex[:20].upper()
         super().save(*args, **kwargs)
 
