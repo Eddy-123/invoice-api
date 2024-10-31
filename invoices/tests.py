@@ -36,14 +36,14 @@ class InvoiceListAPITest(TestCase):
     def setUp(self):
         self.invoice1 = Invoice.objects.create(
             invoice_number="INV001",
-            customer_name="Customer A",
-            customer_email="customera@example.com",
+            client_name="Customer A",
+            client_email="customera@example.com",
             total_amount=100.00,
         )
         self.invoice2 = Invoice.objects.create(
             invoice_number="INV002",
-            customer_name="Customer B",
-            customer_email="customerb@example.com",
+            client_name="Customer B",
+            client_email="customerb@example.com",
             total_amount=100.00,
         )
 
@@ -78,8 +78,8 @@ class InvoiceListAPITest(TestCase):
         self.assertEqual(len(response.data), 2)
 
         self.assertEqual(response.data[0]["invoice_number"], "INV001")
-        self.assertEqual(response.data[0]["customer_name"], "Customer A")
-        self.assertEqual(response.data[0]["customer_email"], "customera@example.com")
+        self.assertEqual(response.data[0]["client_name"], "Customer A")
+        self.assertEqual(response.data[0]["client_email"], "customera@example.com")
         self.assertEqual(response.data[0]["total_amount"], "100.00")
 
 
