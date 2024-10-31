@@ -1,6 +1,7 @@
 from django.core.exceptions import ValidationError
 from decimal import Decimal
-from rest_framework import status
+import django.db
+from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser
 from rest_framework.views import APIView
@@ -13,7 +14,7 @@ from drf_spectacular.utils import (
 from drf_spectacular.types import OpenApiTypes
 from .validators import InvoiceValidator
 from .models import Invoice, Article
-from .serializers import FileSerializer
+from .serializers import FileSerializer, InvoiceSerializer
 
 
 class FileUploadAPIView(APIView):
@@ -99,3 +100,8 @@ class FileUploadAPIView(APIView):
             )
         except ValidationError as e:
             return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class InvoiceListAPIView(generics.ListAPIView):
+    queryset = Invoice.objects.all()
+    serializer_class = InvoiceSerializer
