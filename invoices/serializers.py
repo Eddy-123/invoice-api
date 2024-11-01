@@ -24,6 +24,19 @@ class InvoiceSerializer(serializers.ModelSerializer):
         ]
 
 
+class InvoiceListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Invoice
+        fields = [
+            "id",
+            "invoice_number",
+            "client_name",
+            "client_email",
+            "total_amount",
+        ]
+
+
 class FileSerializer(serializers.Serializer):
     file = serializers.FileField()
     name = serializers.CharField(max_length=255, required=False)
