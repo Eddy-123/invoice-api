@@ -9,3 +9,11 @@ def generate_excel_file(data):
         df.to_excel(writer, index=False)
     output.seek(0)
     return output
+
+
+def is_convertible_to_number(s):
+    try:
+        float(s)
+        return True
+    except (ValueError, TypeError):
+        return False

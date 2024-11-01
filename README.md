@@ -17,6 +17,10 @@ This is a Django-based API designed for invoice generation as part of the Kudizy
 # Business considerations
 
 - If an invoice number is empty in the file, a new invoice is created for this specific article
+- If specified, an invoice number should be at least 4 character length
+  - An empty invoice number is converted to 'nan' in the database
+  - A 'nan' invoice number is converted to 'nan' in the database
+  - In order to avoid misconception related to the two precedent cases, a suitable invoice number format should be adopted by the business
 
 # Documentation
 
