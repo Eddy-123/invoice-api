@@ -12,7 +12,7 @@ from drf_spectacular.utils import (
 from drf_spectacular.types import OpenApiTypes
 from .validators import InvoiceValidator
 from .models import Invoice, Article
-from .serializers import FileSerializer, InvoiceSerializer
+from .serializers import FileSerializer, InvoiceListSerializer, InvoiceSerializer
 
 
 class FileUploadAPIView(APIView):
@@ -102,7 +102,7 @@ class FileUploadAPIView(APIView):
 
 class InvoiceListAPIView(generics.ListAPIView):
     queryset = Invoice.objects.all()
-    serializer_class = InvoiceSerializer
+    serializer_class = InvoiceListSerializer
 
 
 class InvoiceDetailAPIView(generics.RetrieveAPIView):
