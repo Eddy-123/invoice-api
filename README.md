@@ -39,6 +39,11 @@ cp .env.example .env
 pytest
 ```
 
+- Apply migrations
+```bash
+python manage.py migrate
+```
+
 - Run the backend
 
 ```bash
