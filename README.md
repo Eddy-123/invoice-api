@@ -32,6 +32,13 @@ cp .env.example .env
 ```
 
 - Adapt the environment variables to your local settings
+
+- Run the tests from the root folder of the project
+
+```bash
+pytest
+```
+
 - Run the backend
 
 ```bash
