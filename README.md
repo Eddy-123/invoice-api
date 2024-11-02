@@ -40,6 +40,7 @@ pytest
 ```
 
 - Apply migrations
+
 ```bash
 python manage.py migrate
 ```
@@ -69,8 +70,13 @@ python manage.py runserver
 
 # API Documentation
 
-- The swagger documentation is available at: `http://127.0.0.1:8000/api/schema/swagger-ui/`
+- The swagger documentation is available at: http://127.0.0.1:8000/api/schema/swagger-ui/
 
 # Example of excel and csv files
 
 - An example of the format of csv and excel files are included at invoices/files/
+
+# Production
+
+- The backend is deployed on Railway with a separate database in another service on the same platform
+- The swagger documentation is available at https://invoice-api-production-788a.up.railway.app/api/schema/swagger-ui/
