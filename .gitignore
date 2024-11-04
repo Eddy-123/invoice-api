@@ -94,3 +94,5 @@ media/
 cert.crt
 cert.key
 static/
+!static/css/
+!static/img/
