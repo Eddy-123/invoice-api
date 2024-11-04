@@ -130,3 +130,8 @@ class InvoiceListAPIView(generics.ListAPIView):
 class InvoiceDetailAPIView(generics.RetrieveAPIView):
     queryset = Invoice.objects.all()
     serializer_class = InvoiceSerializer
+
+
+class InvoiceDeleteAPIView(generics.DestroyAPIView):
+    queryset = Invoice.objects.all()
+    serializer_class = InvoiceSerializer
