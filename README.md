@@ -68,7 +68,11 @@ python manage.py runserver
   - A 'nan' invoice number is converted to 'nan' in the database
   - In order to avoid misconception related to the two precedent cases, a suitable invoice number format should be adopted by the business
 
-# API Documentation
+# Example of invoice
+
+![Generated Invoice](invoices/files/Facture_kudizy.png)
+
+# Documentation
 
 - The swagger documentation is available at: http://127.0.0.1:8000/api/schema/swagger-ui/
 

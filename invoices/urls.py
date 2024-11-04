@@ -1,9 +1,10 @@
 from django.urls import path
 from .views import (
+    FileDownloadAPIView,
     FileUploadAPIView,
+    InvoiceDeleteAPIView,
     InvoiceDetailAPIView,
     InvoiceListAPIView,
-    FileDownloadAPIView,
 )
 
 
@@ -15,5 +16,10 @@ urlpatterns = [
         "download/invoice/<int:pk>/",
         FileDownloadAPIView.as_view(),
         name="invoice-download",
+    ),
+    path(
+        "invoices/<int:pk>/delete/",
+        InvoiceDeleteAPIView.as_view(),
+        name="invoice-delete",
     ),
 ]
