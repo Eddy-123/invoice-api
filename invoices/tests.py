@@ -350,9 +350,7 @@ class FileDownloadTest(TestCase):
             total_price=50.00,
         )
 
-        self.download_url = reverse(
-            "download-invoice-file", kwargs={"pk": self.invoice.pk}
-        )
+        self.download_url = reverse("invoice-download", kwargs={"pk": self.invoice.pk})
 
     def test_invoice_download_successful(self):
         response = self.client.get(self.download_url)
