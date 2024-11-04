@@ -94,3 +94,4 @@ media/
 cert.crt
 cert.key
 static/
+!invoices/static/
