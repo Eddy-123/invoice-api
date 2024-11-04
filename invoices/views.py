@@ -6,6 +6,7 @@ from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser
 from rest_framework.views import APIView
+from rest_framework.generics import GenericAPIView
 from drf_spectacular.utils import (
     extend_schema,
     OpenApiExample,
@@ -104,7 +105,7 @@ class FileUploadAPIView(APIView):
             return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class FileDownloadAPIView(APIView):
+class FileDownloadAPIView(GenericAPIView):
     def get(self, request, pk):
         try:
             invoice = Invoice.objects.get(pk=pk)
