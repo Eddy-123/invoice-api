@@ -1,1 +1,2 @@
-web: python manage.py migrate && gunicorn invoice.wsgi
+web: python manage.py migrate && python manage.py collectstatic
+ && gunicorn invoice.wsgi
