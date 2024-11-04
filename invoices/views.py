@@ -1,5 +1,4 @@
 from django.core.exceptions import ValidationError
-from django.template.loader import render_to_string
 from django.http import HttpResponse, Http404
 from django.conf import settings
 from decimal import Decimal
@@ -13,7 +12,8 @@ from drf_spectacular.utils import (
     OpenApiResponse,
 )
 from drf_spectacular.types import OpenApiTypes
-import weasyprint
+
+from .helpers import generate_pdf
 from .validators import InvoiceValidator
 from .models import Invoice, Article
 from .serializers import FileSerializer, InvoiceListSerializer, InvoiceSerializer
@@ -108,16 +108,21 @@ class FileDownloadAPIView(APIView):
     def get(self, request, pk):
         try:
             invoice = Invoice.objects.get(pk=pk)
-            html = render_to_string("invoices/invoice/pdf.html", {"invoice": invoice})
-            response = HttpResponse(content_type="application/pdf")
-            response["Content-Disposition"] = (
-                f"filename=Kudizy_{invoice.invoice_number}.pdf"
+            template_path = "invoices/invoice/pdf.html"
+            css_path = settings.STATIC_ROOT / "css/pdf.css"
+            pdf_data = generate_pdf(
+                template_path, context={"invoice": invoice}, css_path=css_path
             )
-            weasyprint.HTML(string=html).write_pdf(
-                response,
-                stylesheets=[weasyprint.CSS(settings.STATIC_ROOT / "css/pdf.css")],
+            if pdf_data:
+                response = HttpResponse(pdf_data, content_type="application/pdf")
+                response["Content-Disposition"] = (
+                    f'attachment; filename="{invoice.invoice_number}.pdf"'
+                )
+                return response
+            return Response(
+                {"error": "Failed to generate PDF"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
-            return response
         except Invoice.DoesNotExist:
             raise Http404("Facture non trouvée")
 
