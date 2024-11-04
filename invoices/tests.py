@@ -355,3 +355,25 @@ class FileDownloadTest(TestCase):
     def test_invoice_download_successful(self):
         response = self.client.get(self.download_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+class InvoiceDeleteTest(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.invoice = Invoice.objects.create(
+            invoice_number="INV001",
+            client_name="Customer A",
+            client_email="customera@example.com",
+            total_amount=100.00,
+        )
+
+    def test_delete_invoice(self):
+        url = reverse("invoice-delete", args=[self.invoice.pk])
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(Invoice.objects.filter(pk=self.invoice.pk).exists())
+
+    def test_delete_non_existent_invoice(self):
+        url = reverse("invoice-delete", args=[Invoice.objects.count() + 1])
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
