@@ -1,0 +1,45 @@
+<html>
+    <body>
+        <h1>Kydizy</h1>
+        <p>
+            Facture. {{ invoice.invoice_number }}<br>
+            <span class="secondary">
+                {{ invoice.created_at|date:"M d, Y" }}
+            </span>
+        </p>
+        <h3>Facturé à</h3>
+        <p>
+            {{ invoice.client_name }}<br>
+            {{ invoice.client_email }}
+        </p>
+        <h3>Articles</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Quantité</th>
+                    <th>Prix Unitaire</th>
+                    <th>Prix Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in invoice.articles.all %}
+                    <tr class="row{% cycle '1' '2' %}">
+                        <td>{{ item.description }}</td>
+                        <td class="num">{{ item.quantity }}</td>
+                        <td class="num">{{ item.unit_price }}</td>
+                        <td class="num">{{ item.total_price }}</td>
+                    </tr>
+                {% endfor %}
+
+                <tr class="total">
+                    <td colspan="3">Total</td>
+                    <td class="num">{{ invoice.total_amount }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <span class="paid">
+            Certifié Kudizy
+        </span>
+    </body>
+</html>

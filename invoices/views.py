@@ -1,4 +1,7 @@
 from django.core.exceptions import ValidationError
+from django.template.loader import render_to_string
+from django.http import HttpResponse, Http404
+from django.conf import settings
 from decimal import Decimal
 from rest_framework import status, generics
 from rest_framework.response import Response
@@ -10,6 +13,7 @@ from drf_spectacular.utils import (
     OpenApiResponse,
 )
 from drf_spectacular.types import OpenApiTypes
+import weasyprint
 from .validators import InvoiceValidator
 from .models import Invoice, Article
 from .serializers import FileSerializer, InvoiceListSerializer, InvoiceSerializer
@@ -98,6 +102,24 @@ class FileUploadAPIView(APIView):
             )
         except ValidationError as e:
             return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class FileDownloadAPIView(APIView):
+    def get(self, request, pk):
+        try:
+            invoice = Invoice.objects.get(pk=pk)
+            html = render_to_string("invoices/invoice/pdf.html", {"invoice": invoice})
+            response = HttpResponse(content_type="application/pdf")
+            response["Content-Disposition"] = (
+                f"filename=Kudizy_{invoice.invoice_number}.pdf"
+            )
+            weasyprint.HTML(string=html).write_pdf(
+                response,
+                stylesheets=[weasyprint.CSS(settings.STATIC_ROOT / "css/pdf.css")],
+            )
+            return response
+        except Invoice.DoesNotExist:
+            raise Http404("Facture non trouvée")
 
 
 class InvoiceListAPIView(generics.ListAPIView):
