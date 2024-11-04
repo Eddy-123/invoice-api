@@ -323,3 +323,37 @@ class FileUploadTest(TestCase):
         response = self.client.post(self.url, {"file": file}, format="multipart")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn("Colonnes manquantes", response.data["detail"])
+
+
+class FileDownloadTest(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.invoice = Invoice.objects.create(
+            invoice_number="INV001",
+            client_name="Customer A",
+            client_email="customera@example.com",
+            total_amount=100.00,
+        )
+
+        Article.objects.create(
+            invoice=self.invoice,
+            description="Article 1",
+            quantity=2,
+            unit_price=25.00,
+            total_price=50.00,
+        )
+        Article.objects.create(
+            invoice=self.invoice,
+            description="Article 2",
+            quantity=1,
+            unit_price=50.00,
+            total_price=50.00,
+        )
+
+        self.download_url = reverse(
+            "download-invoice-file", kwargs={"pk": self.invoice.pk}
+        )
+
+    def test_invoice_download_successful(self):
+        response = self.client.get(self.download_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
